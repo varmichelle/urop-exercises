@@ -1,68 +1,20 @@
-class Vertex:
-    def __init__(self, node):
-        self.id = node
-        self.paths = {}
+def dijkstra(source, graph):
+    distances = [99999]*8 # treat 99999 as INF
+    distances[source] = 0
+    return distances
 
-    def __str__(self):
-        return str(self.id) + ' adjacent: ' + str([x.id for x in self.paths])
+if __name__ == "__main__":
+    # vertices numbered 0 to 8
+    # edges from A to B given by graph[A][B]
+    graph = [[0, 4, 0, 0, 0, 0, 0, 8, 0], 
+            [4, 0, 8, 0, 0, 0, 0, 11, 0], 
+            [0, 8, 0, 7, 0, 4, 0, 0, 2], 
+            [0, 0, 7, 0, 9, 14, 0, 0, 0], 
+            [0, 0, 0, 9, 0, 10, 0, 0, 0], 
+            [0, 0, 4, 14, 10, 0, 2, 0, 0], 
+            [0, 0, 0, 0, 0, 2, 0, 1, 6], 
+            [8, 11, 0, 0, 0, 0, 1, 0, 7], 
+            [0, 0, 2, 0, 0, 0, 6, 7, 0]]
 
-    def add_neighbor(self, neighbor, weight):
-        self.paths[neighbor] = weight
-
-    def get_paths(self):
-        return self.paths.keys()  
-
-    def get_id(self):
-        return self.id
-
-    def get_weight(self, neighbor):
-        return self.paths[neighbor]
-
-class Graph:
-    def __init__(self):
-        self.vertices = {}
-
-    def add_vertex(self, node):
-        self.vertices[node] = Vertex(node)
-
-    def get_vertex(self, n):
-        if n in self.vertices:
-            return self.vertices[n]
-        else:
-            return None
-
-    def add_edge(self, a, b, cost = 0):
-        if a not in self.vertices:
-            self.add_vertex(a)
-        if b not in self.vertices:
-            self.add_vertex(b)
-
-        self.vertices[a].add_neighbor(self.vertices[b], cost)
-        self.vertices[b].add_neighbor(self.vertices[a], cost)
-
-    def get_vertices(self):
-        return self.vertices.values()
-
-if __name__ == '__main__':
-
-    g = Graph()
-
-    g.add_vertex('a')
-    g.add_vertex('b')
-    g.add_vertex('c')
-    g.add_vertex('d')
-    g.add_vertex('e')
-    g.add_vertex('f')
-
-    g.add_edge('a', 'b', 7)  
-    g.add_edge('a', 'c', 9)
-    g.add_edge('a', 'f', 14)
-    g.add_edge('b', 'c', 10)
-    g.add_edge('b', 'd', 15)
-    g.add_edge('c', 'd', 11)
-    g.add_edge('c', 'f', 2)
-    g.add_edge('d', 'e', 6)
-    g.add_edge('e', 'f', 9)
-
-    for vertex in g.get_vertices():
-        print(vertex.__str__())
+    distances = dijkstra(0, graph)
+    print(distances)
