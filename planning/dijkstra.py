@@ -11,8 +11,7 @@ def dijkstra(graph, source):
     visited = set()
     visited.add(source)
     
-    # loop V-1 times (index not important)
-    for i in range(graph.V - 1):
+    for _ in range(graph.V - 1):
         u = 0
         dist = INF
 
