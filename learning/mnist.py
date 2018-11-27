@@ -43,8 +43,8 @@ if __name__ == "__main__":
     train_loader = DataLoader(dataset=train_set, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(dataset=test_set, batch_size=batch_size, shuffle=False)
 
+    # create model
     model = ConvNet()
-
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -52,8 +52,10 @@ if __name__ == "__main__":
     total_step = len(train_loader)
     loss_list = []
     accuracy_list = []
+
     for epoch in range(num_epochs):
         for i, (images, labels) in enumerate(train_loader):
+
             # forward pass
             outputs = model(images)
             loss = criterion(outputs, labels)
@@ -64,18 +66,19 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
 
-            # track accuracy
+            # track progress
             total = labels.size(0)
             _, predicted = torch.max(outputs.data, 1)
             correct = (predicted == labels).sum().item()
             accuracy_list.append(correct / total)
 
+            # print progress
             if (i + 1) % 100 == 0:
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Accuracy: {:.2f}%'
                     .format(epoch + 1, num_epochs, i + 1, total_step, loss.item(),
                             (correct / total) * 100))
 
-    # Test the model
+    # test
     model.eval()
     with torch.no_grad():
         correct = 0
@@ -85,6 +88,6 @@ if __name__ == "__main__":
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-        print('Test Accuracy of the model on the 10000 test images: {} %'.format((correct / total) * 100))
+        print('Accuracy on test set: {} %'.format((correct / total) * 100))
 
     torch.save(model.state_dict(), 'conv_net_model.ckpt')
