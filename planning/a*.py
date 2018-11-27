@@ -21,47 +21,47 @@ def a_star(grid, start, end):
     while len(open) > 0:
 
         # find node with lowest cost
-        cur_node = open[0]
-        cur_index = 0
-        for index, node in enumerate(open):
-            if node.f < cur_node.f:
-                cur_node = node
-                cur_index = index
+        cur = open[0]
+        index = 0
+        for i, node in enumerate(open):
+            if node.f < cur.f:
+                cur = node
+                index = i
 
-        open.pop(cur_index)
-        closed.append(cur_node)
+        open.pop(index)
+        closed.append(cur)
 
         # if we find the goal, return path
-        if cur_node == E:
+        if cur == E:
             path = []
-            cur = cur_node
+            cur = cur
             while cur is not None:
                 path.append(cur.pos)
                 cur = cur.parent
-            return path[::-1] # Return reversed path
+            path.reverse() # reverse because the path was constructed backwards
+            return path
 
+        # neighbors = all adjacent nodes (including diagonals)
         dir = []
         for i in range(-1, 2):
             for j in range(-1, 2):
                 dir.append((i,j))
 
-        children = []
-
+        # append all neighbors
         for (dx, dy) in dir:
-            pos = (cur_node.pos[0] + dx, cur_node.pos[1] + dy)
+            pos = (cur.pos[0] + dx, cur.pos[1] + dy)
             if pos[0] >= len(grid) or pos[0] < 0 or pos[1] >= len(grid[0]) or pos[1] < 0:
                 continue
             if grid[pos[0]][pos[1]] != 0:
                 continue
-            children.append(Node(cur_node, pos))
-
-        for child in children:
-            for closed_child in closed:
-                if child == closed_child:
-                    continue
-            child.g = cur_node.g + 1
-            child.h = ((child.pos[0] - E.pos[0]) ** 2) + ((child.pos[1] - E.pos[1]) ** 2)
+            child = Node(cur, pos)
+            if child in closed:
+                continue
+            child.g += 1 # one step farther away from origin
+            child.h = ((child.pos[0] - E.pos[0]) ** 2) + ((child.pos[1] - E.pos[1]) ** 2) # Euclidean heuristic
             child.f = child.g + child.h
+
+            # append child if it either hasn't been visited or has a lower cost than previously
             for open_node in open:
                 if child == open_node and child.g > open_node.g:
                     continue
