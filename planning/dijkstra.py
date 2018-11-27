@@ -44,4 +44,4 @@ if __name__ == "__main__":
 
     graph = Graph(9, matrix)
     distances = dijkstra(graph, 0)
-    print(distances)
+    print(distances) # [0, 4, 12, 19, 21, 11, 9, 8, 14]
